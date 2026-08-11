@@ -1,0 +1,35 @@
+{
+	"schemaVersion": 1,
+	"id": "tnttrails",
+	"version": "${version}",
+	"name": "TNTtrails",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/tnttrails/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"sectersion.tnttrails.TNTtrails"
+		],
+		"client": [
+			"sectersion.tnttrails.client.TNTtrailsClient"
+		]
+	},
+	"mixins": [
+		"tnttrails.mixins.json",
+		{"config": "tnttrails.client.mixins.json", "environment": "client"}
+	],
+	"depends": {
+		"fabricloader": ">=0.19.3",
+		"minecraft": "~26.2",
+		"java": ">=25",
+		"fabric-api": "*"
+	}
+}

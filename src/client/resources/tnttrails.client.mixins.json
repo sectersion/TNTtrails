@@ -1,0 +1,7 @@
+{
+	"required": true,
+	"package": "sectersion.tnttrails.client.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": ["TNTMixin", "LevelRendererMixin"],
+	"injectors": {"defaultRequire": 1}
+}
