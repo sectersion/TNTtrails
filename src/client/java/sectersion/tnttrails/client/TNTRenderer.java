@@ -9,7 +9,6 @@ import net.minecraft.gizmos.GizmoStyle;
 
 @Environment(EnvType.CLIENT)
 public class TNTRenderer {
-    private static final long TRAIL_LIFETIME_MS = 15000L;
     private static final float LINE_WIDTH = 2.5f;
     private static final float GLOW_WIDTH = 5.0f;
 
@@ -20,7 +19,7 @@ public class TNTRenderer {
                 var from = smooth(positions, i);
                 var to = smooth(positions, i + 1);
                 long age = Math.max(0L, now - positions.get(i + 1).timestamp());
-                float freshness = Math.max(0.0f, 1.0f - (float) age / TRAIL_LIFETIME_MS);
+                float freshness = Math.max(0.0f, 1.0f - (float) age / TNTConfig.lifetimeMillis());
                 float pathProgress = (float) i / (positions.size() - 1);
                 int color = colorFor(pathProgress, 0.50f * freshness);
 
@@ -53,9 +52,11 @@ public class TNTRenderer {
 
     private static int colorFor(float progress, float alpha) {
         // The path starts red and transitions to orange at the TNT.
-        int red = 255;
-        int green = (int) (progress * 190.0f);
-        int blue = 0;
+        int start = TNTConfig.startColor();
+        int end = TNTConfig.endColor();
+        int red = (int) (((start >> 16 & 255) * (1.0f - progress)) + ((end >> 16 & 255) * progress));
+        int green = (int) (((start >> 8 & 255) * (1.0f - progress)) + ((end >> 8 & 255) * progress));
+        int blue = (int) (((start & 255) * (1.0f - progress)) + ((end & 255) * progress));
         int opacity = Math.max(0, Math.min(255, (int) (alpha * 255.0f)));
         return opacity << 24 | red << 16 | green << 8 | blue;
     }
