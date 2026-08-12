@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0] - 2026-08-12
+
+### Added
+
+- Added automated release publishing to GitHub Releases, Modrinth, and CurseForge.
+- Release versions are now read from version tags instead of being hardcoded in Gradle.
+
 ## [1.0.2] - 2026-08-11
 
 ### Added
