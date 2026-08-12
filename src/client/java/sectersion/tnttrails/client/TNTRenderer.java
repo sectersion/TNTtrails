@@ -6,8 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.rendertype.RenderType;
-import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.AABB;
 
@@ -21,7 +20,7 @@ public class TNTRenderer {
         MultiBufferSource consumers = context.consumers();
         if (matrices == null || consumers == null) return;
         matrices.pushPose();
-        VertexConsumer lines = consumers.getBuffer(RenderTypes.leash());
+        VertexConsumer lines = consumers.getBuffer(RenderType.lines());
         long now = System.currentTimeMillis();
         for (var positions : TNTTracker.getInstance().getAllPositions().values()) {
             for (int i = 0; i + 1 < positions.size(); i++) {
