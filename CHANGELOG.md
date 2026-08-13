@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.1] - 2026-08-12
+
+### Added
+
+- Added a configurable trail-width setting from 1 to 8.
+- Persisted the selected trail width in the client configuration.
+
 ## [1.2.0] - 2026-08-12
 
 ### Added

@@ -9,9 +9,6 @@ import net.minecraft.gizmos.GizmoStyle;
 
 @Environment(EnvType.CLIENT)
 public class TNTRenderer {
-    private static final float LINE_WIDTH = 2.5f;
-    private static final float GLOW_WIDTH = 5.0f;
-
     public static void render() {
         long now = System.currentTimeMillis();
         for (var positions : TNTTracker.getInstance().getAllPositions().values()) {
@@ -24,9 +21,9 @@ public class TNTRenderer {
                 int color = colorFor(pathProgress, 0.50f * freshness);
 
                 // A wider, faint pass gives the trail a soft glow without bypassing depth.
-                Gizmos.line(from, to, colorFor(pathProgress, 0.12f * freshness), GLOW_WIDTH)
+                Gizmos.line(from, to, colorFor(pathProgress, 0.12f * freshness), TNTConfig.lineWidth() + 2.0f)
                     .persistForMillis(100);
-                Gizmos.line(from, to, color, LINE_WIDTH)
+                Gizmos.line(from, to, color, TNTConfig.lineWidth())
                     .persistForMillis(100);
             }
         }
