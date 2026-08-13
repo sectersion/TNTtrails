@@ -3,9 +3,9 @@
 	"id": "tnttrails",
 	"version": "${version}",
 	"name": "TNTtrails",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "See where your TNT shots actually go!",
 	"authors": [
-		"Me!"
+		"sectersion"
 	],
 	"contact": {
 		"homepage": "https://fabricmc.net/",
