@@ -31,8 +31,8 @@ public class TNTRenderer {
                 float pathProgress = (float) i / (positions.size() - 1);
                 int color = colorFor(pathProgress, 0.50f * freshness);
 
-                line(lines, matrices, from, to, colorFor(pathProgress, 0.12f * freshness));
-                line(lines, matrices, from, to, color);
+                wideLine(lines, matrices, from, to, colorFor(pathProgress, 0.12f * freshness), TNTConfig.lineWidth() + 2);
+                wideLine(lines, matrices, from, to, color, TNTConfig.lineWidth());
             }
         }
         for (var marker : TNTTracker.getInstance().getExplosions()) {
@@ -51,13 +51,21 @@ public class TNTRenderer {
                 .setColor(color).setNormal(pose, (float) (to.x - from.x), (float) (to.y - from.y), (float) (to.z - from.z));
     }
 
+    private static void wideLine(VertexConsumer consumer, PoseStack matrices, Vec3 from, Vec3 to, int color, int width) {
+        int radius = Math.max(0, width / 2);
+        for (int offset = -radius; offset <= radius; offset++) {
+            line(consumer, matrices, new Vec3(from.x + offset * 0.012, from.y, from.z),
+                    new Vec3(to.x + offset * 0.012, to.y, to.z), color);
+        }
+    }
+
     private static void box(VertexConsumer consumer, PoseStack matrices, AABB box, int color) {
         Vec3[] p = {new Vec3(box.minX, box.minY, box.minZ), new Vec3(box.maxX, box.minY, box.minZ),
                 new Vec3(box.maxX, box.minY, box.maxZ), new Vec3(box.minX, box.minY, box.maxZ),
                 new Vec3(box.minX, box.maxY, box.minZ), new Vec3(box.maxX, box.maxY, box.minZ),
                 new Vec3(box.maxX, box.maxY, box.maxZ), new Vec3(box.minX, box.maxY, box.maxZ)};
         int[][] edges = {{0,1},{1,2},{2,3},{3,0},{4,5},{5,6},{6,7},{7,4},{0,4},{1,5},{2,6},{3,7}};
-        for (int[] edge : edges) line(consumer, matrices, p[edge[0]], p[edge[1]], color);
+        for (int[] edge : edges) wideLine(consumer, matrices, p[edge[0]], p[edge[1]], color, 2);
     }
 
     private static Vec3 smooth(java.util.List<TNTTracker.PositionSnapshot> positions, int index) {

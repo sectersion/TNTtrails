@@ -15,6 +15,7 @@ public final class TNTConfig {
     private static int trailLifetimeSeconds = 15;
     private static int startColor = 0;
     private static int endColor = 1;
+    private static int lineWidth = 3;
 
     private TNTConfig() {}
 
@@ -25,6 +26,7 @@ public final class TNTConfig {
             trailLifetimeSeconds = clamp(Integer.parseInt(properties.getProperty("trailLifetimeSeconds", "15")), 1, 60);
             startColor = clamp(Integer.parseInt(properties.getProperty("startColor", "0")), 0, COLORS.length - 1);
             endColor = clamp(Integer.parseInt(properties.getProperty("endColor", "1")), 0, COLORS.length - 1);
+            lineWidth = clamp(Integer.parseInt(properties.getProperty("lineWidth", "3")), 1, 8);
         } catch (IOException | NumberFormatException ignored) {
             save();
         }
@@ -35,6 +37,7 @@ public final class TNTConfig {
         properties.setProperty("trailLifetimeSeconds", Integer.toString(trailLifetimeSeconds));
         properties.setProperty("startColor", Integer.toString(startColor));
         properties.setProperty("endColor", Integer.toString(endColor));
+        properties.setProperty("lineWidth", Integer.toString(lineWidth));
         try {
             Files.createDirectories(FILE.getParent());
             try (Writer writer = Files.newBufferedWriter(FILE)) { properties.store(writer, "TNT Trails client settings"); }
@@ -52,4 +55,6 @@ public final class TNTConfig {
     public static String endColorName() { return COLOR_NAMES[endColor]; }
     public static void cycleStartColor() { startColor = (startColor + 1) % COLORS.length; save(); }
     public static void cycleEndColor() { endColor = (endColor + 1) % COLORS.length; save(); }
+    public static int lineWidth() { return lineWidth; }
+    public static void cycleLineWidth() { lineWidth = lineWidth >= 8 ? 1 : lineWidth + 1; save(); }
 }
