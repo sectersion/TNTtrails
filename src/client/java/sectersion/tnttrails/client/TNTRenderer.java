@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.world.WorldRenderContext;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.AABB;
 
@@ -21,7 +22,18 @@ public class TNTRenderer {
         MultiBufferSource consumers = context.consumers();
         if (matrices == null || consumers == null) return;
         matrices.pushPose();
-        VertexConsumer lines = consumers.getBuffer(RenderTypes.leash());
+        var player = Minecraft.getInstance().player;
+        if (player == null) {
+            matrices.popPose();
+            return;
+        }
+        float partialTick = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true);
+        Vec3 camera = new Vec3(
+                player.xo + (player.getX() - player.xo) * partialTick,
+                player.yo + (player.getY() - player.yo) * partialTick + player.getEyeHeight(),
+                player.zo + (player.getZ() - player.zo) * partialTick);
+        matrices.translate(-camera.x, -camera.y, -camera.z);
+        VertexConsumer lines = consumers.getBuffer(RenderTypes.LINES);
         long now = System.currentTimeMillis();
         for (var positions : TNTTracker.getInstance().getAllPositions().values()) {
             for (int i = 0; i + 1 < positions.size(); i++) {
@@ -47,9 +59,11 @@ public class TNTRenderer {
     private static void line(VertexConsumer consumer, PoseStack matrices, Vec3 from, Vec3 to, int color) {
         PoseStack.Pose pose = matrices.last();
         consumer.addVertex(pose, (float) from.x, (float) from.y, (float) from.z)
-                .setColor(color).setNormal(pose, (float) (to.x - from.x), (float) (to.y - from.y), (float) (to.z - from.z));
+                .setColor(color).setLineWidth(TNTConfig.lineWidth())
+                .setNormal(pose, (float) (to.x - from.x), (float) (to.y - from.y), (float) (to.z - from.z));
         consumer.addVertex(pose, (float) to.x, (float) to.y, (float) to.z)
-                .setColor(color).setNormal(pose, (float) (to.x - from.x), (float) (to.y - from.y), (float) (to.z - from.z));
+                .setColor(color).setLineWidth(TNTConfig.lineWidth())
+                .setNormal(pose, (float) (to.x - from.x), (float) (to.y - from.y), (float) (to.z - from.z));
     }
 
     private static void wideLine(VertexConsumer consumer, PoseStack matrices, Vec3 from, Vec3 to, int color, int width) {
